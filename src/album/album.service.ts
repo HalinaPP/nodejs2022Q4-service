@@ -12,15 +12,15 @@ export class AlbumService {
     return `This action returns all album`;
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return `This action returns a #${id} album`;
   }
 
-  update(id: number, updateAlbumDto: UpdateAlbumDto) {
+  update(id: string, updateAlbumDto: UpdateAlbumDto) {
     return `This action updates a #${id} album`;
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return `This action removes a #${id} album`;
   }
 }
