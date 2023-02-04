@@ -1,3 +1,4 @@
+import { ParseUUIDPipe } from '@nestjs/common/pipes';
 import {
   Controller,
   Get,
@@ -6,6 +7,9 @@ import {
   Put,
   Param,
   Delete,
+  NotFoundException,
+  HttpStatus,
+  HttpException,
 } from '@nestjs/common';
 import { ArtistService } from './artist.service';
 import { CreateArtistDto } from './dto/create-artist.dto';
@@ -26,17 +30,35 @@ export class ArtistController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.artistService.findOne(id);
+  findOne(@Param('id', ParseUUIDPipe) id: string) {
+    const artist = this.artistService.findOne(id);
+
+    if (artist) {
+      return artist;
+    }
+
+    throw new NotFoundException();
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateArtistDto: UpdateArtistDto) {
+  update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() updateArtistDto: UpdateArtistDto,
+  ) {
     return this.artistService.update(id, updateArtistDto);
   }
 
+  // null to album artistId
+  // null to track artistId
+  // remove from favs artists
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.artistService.remove(id);
+  remove(@Param('id', ParseUUIDPipe) id: string) {
+    const isDeleted = this.artistService.remove(id);
+
+    if (!isDeleted) {
+      throw new NotFoundException();
+    }
+
+    throw new HttpException('Forbidden', HttpStatus.NO_CONTENT);
   }
 }

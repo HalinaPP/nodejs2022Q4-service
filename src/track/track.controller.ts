@@ -1,3 +1,5 @@
+import { HttpStatus } from '@nestjs/common/enums';
+import { ParseUUIDPipe } from '@nestjs/common/pipes';
 import {
   Controller,
   Get,
@@ -6,6 +8,8 @@ import {
   Put,
   Param,
   Delete,
+  NotFoundException,
+  HttpException,
 } from '@nestjs/common';
 import { TrackService } from './track.service';
 import { CreateTrackDto } from './dto/create-track.dto';
@@ -26,17 +30,33 @@ export class TrackController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.trackService.findOne(id);
+  findOne(@Param('id', ParseUUIDPipe) id: string) {
+    const track = this.trackService.findOne(id);
+
+    if (track) {
+      return track;
+    }
+
+    throw new NotFoundException();
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateTrackDto: UpdateTrackDto) {
+  update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() updateTrackDto: UpdateTrackDto,
+  ) {
     return this.trackService.update(id, updateTrackDto);
   }
 
+  // remove from favs tracks
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.trackService.remove(id);
+  remove(@Param('id', ParseUUIDPipe) id: string) {
+    const isDeleted = this.trackService.remove(id);
+
+    if (!isDeleted) {
+      throw new NotFoundException();
+    }
+
+    throw new HttpException('Forbidden', HttpStatus.NO_CONTENT);
   }
 }

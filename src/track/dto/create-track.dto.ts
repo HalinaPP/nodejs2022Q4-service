@@ -1,6 +1,15 @@
+import { IsAlpha, Length, IsUUID, IsInt } from 'class-validator';
 export class CreateTrackDto {
+  @IsAlpha()
+  @Length(2, 20)
   name: string;
-  artistId: string | null; // refers to Artist
-  albumId: string | null; // refers to Album
-  duration: number; // integer number
+
+  @IsUUID()
+  artistId: string | null;
+
+  @IsUUID()
+  albumId: string | null;
+
+  @IsInt()
+  duration: number;
 }

@@ -1,3 +1,4 @@
+import { ParseUUIDPipe } from '@nestjs/common/pipes';
 import {
   Controller,
   Get,
@@ -6,6 +7,9 @@ import {
   Put,
   Param,
   Delete,
+  NotFoundException,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { AlbumService } from './album.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
@@ -26,17 +30,34 @@ export class AlbumController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.albumService.findOne(id);
+  findOne(@Param('id', ParseUUIDPipe) id: string) {
+    const album = this.albumService.findOne(id);
+
+    if (album) {
+      return album;
+    }
+
+    throw new NotFoundException();
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateAlbumDto: UpdateAlbumDto) {
+  update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() updateAlbumDto: UpdateAlbumDto,
+  ) {
     return this.albumService.update(id, updateAlbumDto);
   }
 
+  // remove from favs albums
+  // null to track in albumId
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.albumService.remove(id);
+  remove(@Param('id', ParseUUIDPipe) id: string) {
+    const isDeleted = this.albumService.remove(id);
+
+    if (!isDeleted) {
+      throw new NotFoundException();
+    }
+
+    throw new HttpException('No content', HttpStatus.NO_CONTENT);
   }
 }

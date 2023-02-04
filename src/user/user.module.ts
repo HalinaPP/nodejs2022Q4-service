@@ -12,6 +12,5 @@ import { UserController } from './user.controller';
       useClass: InMemoryUserStorage,
     },
   ],
-  exports: [UserService],
 })
 export class UserModule { }

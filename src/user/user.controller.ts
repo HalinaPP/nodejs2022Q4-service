@@ -7,12 +7,15 @@ import {
   Param,
   Delete,
   Put,
+  HttpStatus,
+  Res,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { NotFoundException } from '@nestjs/common/exceptions';
+import { HttpException, NotFoundException } from '@nestjs/common/exceptions';
 import { ParseUUIDPipe } from '@nestjs/common/pipes';
+import { Response } from 'express';
 
 @Controller('user')
 export class UserController {
@@ -57,5 +60,7 @@ export class UserController {
     if (!isDeleted) {
       throw new NotFoundException();
     }
+
+    throw new HttpException('Forbidden', HttpStatus.NO_CONTENT);
   }
 }
