@@ -26,4 +26,8 @@ export class TrackService {
   remove(id: string) {
     return this.trackStorage.delete(id);
   }
+
+  setNullToAlbumId(albumId: string) {
+    return this.trackStorage.setNullToAlbumId(albumId);
+  }
 }

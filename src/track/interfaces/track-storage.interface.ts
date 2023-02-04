@@ -11,4 +11,5 @@ export interface TrackStorage {
     trackForUpdate: UpdateTrackDto,
   ) => TrackEntity | undefined;
   create: (userData: CreateTrackDto) => TrackEntity;
+  setNullToAlbumId: (albumId: string) => void;
 }

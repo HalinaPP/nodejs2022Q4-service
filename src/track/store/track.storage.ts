@@ -52,4 +52,18 @@ export class InMemoryTrackStorage {
 
     return newTrack;
   }
+
+  setNullToAlbumId(albumId: string): void {
+    const tracks = this.findAll();
+
+    const updatedTracks = tracks.map((track) => {
+      if (track.albumId === albumId) {
+        track.albumId = null;
+      }
+
+      return track;
+    });
+
+    this.tracks = [...updatedTracks];
+  }
 }

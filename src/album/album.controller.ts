@@ -45,11 +45,15 @@ export class AlbumController {
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateAlbumDto: UpdateAlbumDto,
   ) {
-    return this.albumService.update(id, updateAlbumDto);
+    const updatedUser = this.albumService.update(id, updateAlbumDto);
+    if (updatedUser) {
+      return updatedUser;
+    }
+
+    throw new NotFoundException();
   }
 
   // remove from favs albums
-  // null to track in albumId
   @Delete(':id')
   remove(@Param('id', ParseUUIDPipe) id: string) {
     const isDeleted = this.albumService.remove(id);

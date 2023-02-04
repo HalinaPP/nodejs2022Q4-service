@@ -1,13 +1,13 @@
-import { IsAlpha, Length, IsUUID, IsInt } from 'class-validator';
+import { Length, IsUUID, IsInt, IsString } from 'class-validator';
 export class CreateTrackDto {
-  @IsAlpha()
+  @IsString()
   @Length(2, 20)
   name: string;
 
-  @IsUUID()
+  //@IsUUID()
   artistId: string | null;
 
-  @IsUUID()
+  //@IsUUID()
   albumId: string | null;
 
   @IsInt()

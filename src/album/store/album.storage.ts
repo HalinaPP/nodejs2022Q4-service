@@ -16,7 +16,7 @@ export class InMemoryAlbumStorage {
     return this.albums.find((album) => album.id === id);
   }
 
-  deletealbum(id: string): boolean {
+  delete(id: string): boolean {
     const albumIndex = this.albums.findIndex((album) => album.id === id);
 
     if (albumIndex < 0) {

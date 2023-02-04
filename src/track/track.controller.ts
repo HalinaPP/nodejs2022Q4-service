@@ -57,6 +57,6 @@ export class TrackController {
       throw new NotFoundException();
     }
 
-    throw new HttpException('Forbidden', HttpStatus.NO_CONTENT);
+    throw new HttpException('No content', HttpStatus.NO_CONTENT);
   }
 }
