@@ -1,26 +1,43 @@
-import { Injectable } from '@nestjs/common';
+import { UserEntity } from './entities/user.entity';
+import { Inject, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UserStorage } from './interfaces/user-storage.interface';
 
 @Injectable()
 export class UserService {
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  constructor(@Inject('UserStorage') private userStorage: UserStorage) { }
+
+  create(createUserDto: CreateUserDto): UserEntity {
+    return this.userStorage.create(createUserDto);
   }
 
-  findAll() {
-    return `This action returns all user`;
+  findAll(): UserEntity[] {
+    return this.userStorage.findAll();
   }
 
-  findOne(id: string) {
-    return `This action returns a #${id} user`;
+  findOne(id: string): UserEntity | undefined {
+    return this.userStorage.findOne(id);
   }
 
-  update(id: string, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  update(id: string, updateUserDto: UpdateUserDto): UserEntity {
+    const user = this.findOne(id);
+
+    if (!user) {
+      throw new Error('not exists');
+    }
+
+    if (user.password !== updateUserDto.oldPassword) {
+      throw new Error('403');
+    }
+
+    const updatedUser = this.userStorage.update(id, updateUserDto);
+
+    return updatedUser;
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} user`;
+  //add removing from favs
+  remove(id: string): boolean {
+    return this.userStorage.deleteUser(id);
   }
 }

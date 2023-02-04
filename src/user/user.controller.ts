@@ -1,3 +1,4 @@
+import { UserDto } from './dto/user.dto';
 import {
   Controller,
   Get,
@@ -10,6 +11,8 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { NotFoundException } from '@nestjs/common/exceptions';
+import { ParseUUIDPipe } from '@nestjs/common/pipes';
 
 @Controller('user')
 export class UserController {
@@ -26,17 +29,33 @@ export class UserController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(id);
+  findOne(@Param('id', ParseUUIDPipe) id: string) {
+    const user: UserDto = this.userService.findOne(id);
+    if (user) {
+      return user;
+    }
+
+    throw new NotFoundException();
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(id, updateUserDto);
+  update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
+    const updatedUser = this.userService.update(id, updateUserDto);
+    if (updatedUser) {
+      return updatedUser;
+    }
+
+    throw new NotFoundException();
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(id);
+  remove(@Param('id', ParseUUIDPipe) id: string) {
+    const isDeleted = this.userService.remove(id);
+    if (!isDeleted) {
+      throw new NotFoundException();
+    }
   }
 }
