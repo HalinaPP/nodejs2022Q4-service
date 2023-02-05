@@ -1,15 +1,17 @@
 import { TrackService } from './../track/track.service';
-import { ArtistService } from './../artist/artist.service';
-import { Inject, Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
 import { AlbumStorage } from './interfaces/album-storage.interface';
+import { ArtistService } from 'src/artist/artist.service';
 
 @Injectable()
 export class AlbumService {
   constructor(
     @Inject('AlbumStorage') private albumStorage: AlbumStorage,
+    @Inject(forwardRef(() => ArtistService))
     private artistService: ArtistService,
+    @Inject(forwardRef(() => TrackService))
     private trackService: TrackService,
   ) { }
 
@@ -42,7 +44,6 @@ export class AlbumService {
       const artist = this.artistService.findOne(artistId);
 
       if (!artist) {
-        console.log('ar=', artistId);
         throw new Error('Artist not found/BadRequest');
       }
     }
@@ -54,5 +55,9 @@ export class AlbumService {
     this.trackService.setNullToAlbumId(id);
 
     return this.albumStorage.delete(id);
+  }
+
+  setNullToArtistId(artistId: string) {
+    return this.albumStorage.setNullToArtistId(artistId);
   }
 }

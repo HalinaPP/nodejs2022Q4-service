@@ -6,8 +6,6 @@ import { AlbumEntity } from '../entities/album.entity';
 export class InMemoryAlbumStorage {
   private albums: AlbumEntity[] = [];
 
-  constructor() { }
-
   findAll(): AlbumEntity[] {
     return this.albums;
   }
@@ -53,5 +51,18 @@ export class InMemoryAlbumStorage {
     this.albums.push(newalbum);
 
     return newalbum;
+  }
+
+  setNullToArtistId(artistId: string): void {
+    const albums = this.findAll();
+
+    const updatedAlbums = albums.map((album) => {
+      if (album.artistId === artistId) {
+        album.artistId = null;
+      }
+
+      return album;
+    });
+    this.albums = [...updatedAlbums];
   }
 }

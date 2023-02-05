@@ -1,7 +1,7 @@
-import { IsAlphanumeric, IsString, Length } from 'class-validator';
+import { IsString, Length } from 'class-validator';
 
 export class CreateUserDto {
-  @IsAlphanumeric()
+  @IsString()
   @Length(1, 20)
   login: string;
 

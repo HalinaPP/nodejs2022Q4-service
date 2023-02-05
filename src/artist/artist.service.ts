@@ -1,11 +1,19 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { TrackService } from './../track/track.service';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { AlbumService } from 'src/album/album.service';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
 import { ArtistStorage } from './interfaces/artist-storage.interface';
 
 @Injectable()
 export class ArtistService {
-  constructor(@Inject('ArtistStorage') private artistStorage: ArtistStorage) { }
+  constructor(
+    @Inject('ArtistStorage') private artistStorage: ArtistStorage,
+    @Inject(forwardRef(() => TrackService))
+    private trackService: TrackService,
+    @Inject(forwardRef(() => AlbumService))
+    private albumService: AlbumService,
+  ) { }
 
   create(createArtistDto: CreateArtistDto) {
     return this.artistStorage.create(createArtistDto);
@@ -24,6 +32,9 @@ export class ArtistService {
   }
 
   remove(id: string) {
+    this.trackService.setNullToArtistId(id);
+    this.albumService.setNullToArtistId(id);
+
     return this.artistStorage.delete(id);
   }
 }

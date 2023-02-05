@@ -1,4 +1,4 @@
-import { IsInt, IsString, Length, IsUUID } from 'class-validator';
+import { IsInt, IsString, Length } from 'class-validator';
 
 export class CreateAlbumDto {
   @IsString()

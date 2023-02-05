@@ -8,18 +8,17 @@ import {
   Delete,
   Put,
   HttpStatus,
-  Res,
+  HttpCode,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { HttpException, NotFoundException } from '@nestjs/common/exceptions';
+import { NotFoundException } from '@nestjs/common/exceptions';
 import { ParseUUIDPipe } from '@nestjs/common/pipes';
-import { Response } from 'express';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) { }
+  constructor(private readonly userService: UserService) {}
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
@@ -47,6 +46,7 @@ export class UserController {
     @Body() updateUserDto: UpdateUserDto,
   ) {
     const updatedUser = this.userService.update(id, updateUserDto);
+    console.log('u=', updatedUser);
     if (updatedUser) {
       return updatedUser;
     }
@@ -55,12 +55,11 @@ export class UserController {
   }
 
   @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param('id', ParseUUIDPipe) id: string) {
     const isDeleted = this.userService.remove(id);
     if (!isDeleted) {
       throw new NotFoundException();
     }
-
-    throw new HttpException('No content', HttpStatus.NO_CONTENT);
   }
 }

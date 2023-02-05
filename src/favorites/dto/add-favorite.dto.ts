@@ -1,5 +1,5 @@
-export class AddFavoriteTrackDto { }
+export class AddFavoriteTrackDto {}
 
-export class AddFavoriteAlbumDto { }
+export class AddFavoriteAlbumDto {}
 
-export class AddFavoriteArtistDto { }
+export class AddFavoriteArtistDto {}

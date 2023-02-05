@@ -6,8 +6,6 @@ import { UserEntity } from '../entities/user.entity';
 export class InMemoryUserStorage {
   private users: UserEntity[] = [];
 
-  constructor() { }
-
   findAll(): UserEntity[] {
     return this.users.map((user) => {
       delete user.password;
@@ -53,7 +51,10 @@ export class InMemoryUserStorage {
       updatedAt: now,
     };
 
-    return this.users[userIndex];
+    const updatedUser = { ...this.users[userIndex] };
+    delete updatedUser.password;
+
+    return updatedUser;
   }
 
   create(userData: CreateUserDto): UserEntity {
@@ -69,7 +70,10 @@ export class InMemoryUserStorage {
       createdAt: now,
       updatedAt: now,
     };
+
     this.users.push(newUser);
+
+    delete newUser.password;
 
     return newUser;
   }

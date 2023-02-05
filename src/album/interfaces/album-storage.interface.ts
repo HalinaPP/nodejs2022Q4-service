@@ -11,4 +11,5 @@ export interface AlbumStorage {
     albumForUpdate: UpdateAlbumDto,
   ) => AlbumEntity | undefined;
   create: (userData: CreateAlbumDto) => AlbumEntity;
+  setNullToArtistId: (artistId: string) => void;
 }

@@ -1,7 +1,9 @@
-import { Module } from '@nestjs/common';
+import { AlbumModule } from './../album/album.module';
+import { forwardRef, Module } from '@nestjs/common';
 import { TrackService } from './track.service';
 import { TrackController } from './track.controller';
 import { InMemoryTrackStorage } from './store/track.storage';
+import { ArtistModule } from 'src/artist/artist.module';
 
 @Module({
   controllers: [TrackController],
@@ -12,6 +14,11 @@ import { InMemoryTrackStorage } from './store/track.storage';
       useClass: InMemoryTrackStorage,
     },
   ],
-  exports: [TrackService],
+  exports: [
+    TrackService,
+
+  ],
+  imports: [forwardRef(() => ArtistModule),
+  forwardRef(() => AlbumModule)]
 })
 export class TrackModule { }

@@ -17,7 +17,7 @@ import { UpdateTrackDto } from './dto/update-track.dto';
 
 @Controller('track')
 export class TrackController {
-  constructor(private readonly trackService: TrackService) { }
+  constructor(private readonly trackService: TrackService) {}
 
   @Post()
   create(@Body() createTrackDto: CreateTrackDto) {
@@ -45,7 +45,13 @@ export class TrackController {
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateTrackDto: UpdateTrackDto,
   ) {
-    return this.trackService.update(id, updateTrackDto);
+    const track = this.trackService.update(id, updateTrackDto);
+
+    if (track) {
+      return track;
+    }
+
+    throw new NotFoundException();
   }
 
   // remove from favs tracks

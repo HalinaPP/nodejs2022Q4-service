@@ -17,7 +17,7 @@ import { UpdateArtistDto } from './dto/update-artist.dto';
 
 @Controller('artist')
 export class ArtistController {
-  constructor(private readonly artistService: ArtistService) { }
+  constructor(private readonly artistService: ArtistService) {}
 
   @Post()
   create(@Body() createArtistDto: CreateArtistDto) {
@@ -45,11 +45,15 @@ export class ArtistController {
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateArtistDto: UpdateArtistDto,
   ) {
-    return this.artistService.update(id, updateArtistDto);
+    const artist = this.artistService.update(id, updateArtistDto);
+
+    if (artist) {
+      return artist;
+    }
+
+    throw new NotFoundException();
   }
 
-  // null to album artistId
-  // null to track artistId
   // remove from favs artists
   @Delete(':id')
   remove(@Param('id', ParseUUIDPipe) id: string) {
