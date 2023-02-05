@@ -14,11 +14,7 @@ import { ArtistModule } from 'src/artist/artist.module';
       useClass: InMemoryTrackStorage,
     },
   ],
-  exports: [
-    TrackService,
-
-  ],
-  imports: [forwardRef(() => ArtistModule),
-  forwardRef(() => AlbumModule)]
+  exports: [TrackService],
+  imports: [forwardRef(() => ArtistModule), forwardRef(() => AlbumModule)],
 })
 export class TrackModule { }

@@ -10,6 +10,7 @@ import {
   Delete,
   NotFoundException,
   HttpException,
+  HttpCode,
 } from '@nestjs/common';
 import { TrackService } from './track.service';
 import { CreateTrackDto } from './dto/create-track.dto';
@@ -17,7 +18,7 @@ import { UpdateTrackDto } from './dto/update-track.dto';
 
 @Controller('track')
 export class TrackController {
-  constructor(private readonly trackService: TrackService) {}
+  constructor(private readonly trackService: TrackService) { }
 
   @Post()
   create(@Body() createTrackDto: CreateTrackDto) {
@@ -56,13 +57,12 @@ export class TrackController {
 
   // remove from favs tracks
   @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param('id', ParseUUIDPipe) id: string) {
     const isDeleted = this.trackService.remove(id);
 
     if (!isDeleted) {
       throw new NotFoundException();
     }
-
-    throw new HttpException('No content', HttpStatus.NO_CONTENT);
   }
 }

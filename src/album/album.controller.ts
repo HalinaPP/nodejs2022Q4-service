@@ -10,6 +10,7 @@ import {
   NotFoundException,
   HttpException,
   HttpStatus,
+  HttpCode,
 } from '@nestjs/common';
 import { AlbumService } from './album.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
@@ -17,7 +18,7 @@ import { UpdateAlbumDto } from './dto/update-album.dto';
 
 @Controller('album')
 export class AlbumController {
-  constructor(private readonly albumService: AlbumService) {}
+  constructor(private readonly albumService: AlbumService) { }
 
   @Post()
   create(@Body() createAlbumDto: CreateAlbumDto) {
@@ -55,13 +56,12 @@ export class AlbumController {
 
   // remove from favs albums
   @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param('id', ParseUUIDPipe) id: string) {
     const isDeleted = this.albumService.remove(id);
 
     if (!isDeleted) {
       throw new NotFoundException();
     }
-
-    throw new HttpException('No content', HttpStatus.NO_CONTENT);
   }
 }
