@@ -9,7 +9,6 @@ import {
   Param,
   Delete,
   NotFoundException,
-  HttpException,
   HttpCode,
 } from '@nestjs/common';
 import { TrackService } from './track.service';
@@ -55,7 +54,6 @@ export class TrackController {
     throw new NotFoundException();
   }
 
-  // remove from favs tracks
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param('id', ParseUUIDPipe) id: string) {

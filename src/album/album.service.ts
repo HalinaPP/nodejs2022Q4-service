@@ -1,3 +1,4 @@
+import { FavoritesService } from './../favorites/favorites.service';
 import { TrackService } from './../track/track.service';
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { CreateAlbumDto } from './dto/create-album.dto';
@@ -13,6 +14,8 @@ export class AlbumService {
     private artistService: ArtistService,
     @Inject(forwardRef(() => TrackService))
     private trackService: TrackService,
+    @Inject(forwardRef(() => FavoritesService))
+    private favoriteService: FavoritesService,
   ) { }
 
   create(createAlbumDto: CreateAlbumDto) {
@@ -53,6 +56,7 @@ export class AlbumService {
 
   remove(id: string) {
     this.trackService.setNullToAlbumId(id);
+    this.favoriteService.removeAlbum(id);
 
     return this.albumStorage.delete(id);
   }

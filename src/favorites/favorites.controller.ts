@@ -1,5 +1,13 @@
 import { ParseUUIDPipe } from '@nestjs/common/pipes';
-import { Controller, Get, Post, Body, Param, Delete, HttpCode, HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Param,
+  Delete,
+  HttpCode,
+  HttpStatus,
+} from '@nestjs/common';
 import { FavoritesService } from './favorites.service';
 
 @Controller('favs')

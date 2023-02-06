@@ -3,7 +3,7 @@ import {
   Inject,
   Injectable,
   NotFoundException,
-  BadRequestException,
+  ForbiddenException,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -11,7 +11,7 @@ import { UserStorage } from './interfaces/user-storage.interface';
 
 @Injectable()
 export class UserService {
-  constructor(@Inject('UserStorage') private userStorage: UserStorage) {}
+  constructor(@Inject('UserStorage') private userStorage: UserStorage) { }
 
   create(createUserDto: CreateUserDto): UserEntity {
     return this.userStorage.create(createUserDto);
@@ -26,14 +26,14 @@ export class UserService {
   }
 
   update(id: string, updateUserDto: UpdateUserDto): UserEntity {
-    const user = this.findOne(id);
+    const user = this.userStorage.findOneWithPassword(id);
 
     if (!user) {
       throw new NotFoundException();
     }
 
     if (user.password !== updateUserDto.oldPassword) {
-      throw new BadRequestException();
+      throw new ForbiddenException();
     }
 
     const updatedUser = this.userStorage.update(id, updateUserDto);
@@ -41,7 +41,6 @@ export class UserService {
     return updatedUser;
   }
 
-  //add removing from favs
   remove(id: string): boolean {
     return this.userStorage.deleteUser(id);
   }

@@ -1,3 +1,4 @@
+import { FavoritesModule } from './../favorites/favorites.module';
 import { TrackModule } from './../track/track.module';
 import { AlbumModule } from './../album/album.module';
 import { forwardRef, Module } from '@nestjs/common';
@@ -15,6 +16,10 @@ import { InMemoryArtistStorage } from './store/artist.storage';
     },
   ],
   exports: [ArtistService],
-  imports: [forwardRef(() => AlbumModule), forwardRef(() => TrackModule)],
+  imports: [
+    forwardRef(() => AlbumModule),
+    forwardRef(() => TrackModule),
+    forwardRef(() => FavoritesModule),
+  ],
 })
 export class ArtistModule { }

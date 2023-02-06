@@ -15,6 +15,7 @@ import { InMemoryFavoriteStorage } from './store/favorites.storage';
       useClass: InMemoryFavoriteStorage,
     },
   ],
+  exports: [FavoritesService],
   imports: [
     forwardRef(() => ArtistModule),
     forwardRef(() => AlbumModule),

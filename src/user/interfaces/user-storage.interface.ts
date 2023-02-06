@@ -5,6 +5,7 @@ import { UserEntity } from '../entities/user.entity';
 export interface UserStorage {
   findAll: () => UserEntity[];
   findOne: (id: string) => UserEntity | undefined;
+  findOneWithPassword: (id: string) => UserEntity | undefined;
   deleteUser: (id: string) => boolean;
   update: (id: string, userForUpdate: UpdateUserDto) => UserEntity | undefined;
   create: (userData: CreateUserDto) => UserEntity;

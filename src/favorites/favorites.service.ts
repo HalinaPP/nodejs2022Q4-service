@@ -4,7 +4,12 @@ import { AlbumEntity } from './../album/entities/album.entity';
 import { AlbumService } from 'src/album/album.service';
 import { ArtistEntity } from './../artist/entities/artist.entity';
 import { FavoriteStorage } from './interfaces/favorites-storage.interface';
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import {
+  forwardRef,
+  Inject,
+  Injectable,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { ArtistService } from 'src/artist/artist.service';
 
 @Injectable()
@@ -23,7 +28,7 @@ export class FavoritesService {
     const track: TrackEntity = this.trackService.findOne(id);
 
     if (!track) {
-      throw new Error('Artist not found/422');
+      throw new UnprocessableEntityException("Track doesn't exist");
     }
 
     return this.favoriteStorage.addTrack(id);
@@ -33,7 +38,7 @@ export class FavoritesService {
     const album: AlbumEntity = this.albumService.findOne(id);
 
     if (!album) {
-      throw new Error('album not found/422');
+      throw new UnprocessableEntityException("Album doesn't exist");
     }
 
     return this.favoriteStorage.addAlbum(id);
@@ -43,7 +48,7 @@ export class FavoritesService {
     const artist: ArtistEntity = this.artistService.findOne(id);
 
     if (!artist) {
-      throw new Error('album not found/422');
+      throw new UnprocessableEntityException("Artist doesn't exist");
     }
 
     return this.favoriteStorage.addArtist(id);
@@ -51,7 +56,7 @@ export class FavoritesService {
 
   findAll() {
     const favorites = this.favoriteStorage.findAll();
-
+    console.log('fav id=', favorites);
     const {
       artists: artistIds,
       albums: albumIds,
@@ -69,6 +74,8 @@ export class FavoritesService {
     const tracks: TrackEntity[] = trackIds.map((trackId) =>
       this.trackService.findOne(trackId),
     );
+
+    console.log('fav:=', artists, ' alb=', albums, ' tr=', tracks);
 
     return { artists, albums, tracks };
   }

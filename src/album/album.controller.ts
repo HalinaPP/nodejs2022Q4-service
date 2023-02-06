@@ -54,7 +54,6 @@ export class AlbumController {
     throw new NotFoundException();
   }
 
-  // remove from favs albums
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param('id', ParseUUIDPipe) id: string) {

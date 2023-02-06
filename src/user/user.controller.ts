@@ -18,7 +18,7 @@ import { ParseUUIDPipe } from '@nestjs/common/pipes';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) { }
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
@@ -46,7 +46,7 @@ export class UserController {
     @Body() updateUserDto: UpdateUserDto,
   ) {
     const updatedUser = this.userService.update(id, updateUserDto);
-    console.log('u=', updatedUser);
+
     if (updatedUser) {
       return updatedUser;
     }

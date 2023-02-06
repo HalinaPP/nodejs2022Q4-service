@@ -4,6 +4,7 @@ import { AlbumService } from 'src/album/album.service';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
 import { ArtistStorage } from './interfaces/artist-storage.interface';
+import { FavoritesService } from 'src/favorites/favorites.service';
 
 @Injectable()
 export class ArtistService {
@@ -13,6 +14,8 @@ export class ArtistService {
     private trackService: TrackService,
     @Inject(forwardRef(() => AlbumService))
     private albumService: AlbumService,
+    @Inject(forwardRef(() => FavoritesService))
+    private favoriteService: FavoritesService,
   ) { }
 
   create(createArtistDto: CreateArtistDto) {
@@ -34,6 +37,7 @@ export class ArtistService {
   remove(id: string) {
     this.trackService.setNullToArtistId(id);
     this.albumService.setNullToArtistId(id);
+    this.favoriteService.removeArtist(id);
 
     return this.artistStorage.delete(id);
   }

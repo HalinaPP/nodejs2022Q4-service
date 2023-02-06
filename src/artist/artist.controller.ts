@@ -9,7 +9,6 @@ import {
   Delete,
   NotFoundException,
   HttpStatus,
-  HttpException,
   HttpCode,
 } from '@nestjs/common';
 import { ArtistService } from './artist.service';
@@ -55,7 +54,6 @@ export class ArtistController {
     throw new NotFoundException();
   }
 
-  // remove from favs artists
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param('id', ParseUUIDPipe) id: string) {

@@ -1,3 +1,4 @@
+import { FavoritesModule } from './../favorites/favorites.module';
 import { AlbumModule } from './../album/album.module';
 import { forwardRef, Module } from '@nestjs/common';
 import { TrackService } from './track.service';
@@ -15,6 +16,10 @@ import { ArtistModule } from 'src/artist/artist.module';
     },
   ],
   exports: [TrackService],
-  imports: [forwardRef(() => ArtistModule), forwardRef(() => AlbumModule)],
+  imports: [
+    forwardRef(() => ArtistModule),
+    forwardRef(() => AlbumModule),
+    forwardRef(() => FavoritesModule),
+  ],
 })
 export class TrackModule { }

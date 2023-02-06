@@ -7,7 +7,9 @@ export class InMemoryUserStorage {
   private users: UserEntity[] = [];
 
   findAll(): UserEntity[] {
-    return this.users.map((user) => {
+    const usersWithoutPassword = [...this.users];
+
+    return usersWithoutPassword.map((user) => {
       delete user.password;
       return user;
     });
@@ -15,9 +17,16 @@ export class InMemoryUserStorage {
 
   findOne(id: string): UserEntity | undefined {
     const user = this.users.find((user) => user.id === id);
+
     if (user) {
-      delete user.password;
+      // delete user.password;
     }
+
+    return user;
+  }
+
+  findOneWithPassword(id: string): UserEntity | undefined {
+    const user = this.users.find((user) => user.id === id);
     return user;
   }
 
@@ -71,7 +80,7 @@ export class InMemoryUserStorage {
       updatedAt: now,
     };
 
-    this.users.push(newUser);
+    this.users = [...this.users, { ...newUser }];
 
     delete newUser.password;
 

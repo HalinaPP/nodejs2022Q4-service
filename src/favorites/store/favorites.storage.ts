@@ -1,4 +1,3 @@
-import { FavoritesRepsonseEntity } from '../entities/favorite-response.entity';
 import { FavoriteEntity } from '../entities/favorite.entity';
 
 export class InMemoryFavoriteStorage {
@@ -45,8 +44,11 @@ export class InMemoryFavoriteStorage {
 
   addArtist(id: string): void {
     const isIdExists = this.favorites.artists.includes(id);
+    console.log('add artist id=', id, ' isex=', isIdExists);
+
     if (!isIdExists) {
       this.favorites.artists.push(id);
+      console.log('fav in add=', this.favorites.artists);
     }
   }
 }
