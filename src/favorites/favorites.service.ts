@@ -56,7 +56,7 @@ export class FavoritesService {
 
   findAll() {
     const favorites = this.favoriteStorage.findAll();
-    console.log('fav id=', favorites);
+
     const {
       artists: artistIds,
       albums: albumIds,
@@ -74,8 +74,6 @@ export class FavoritesService {
     const tracks: TrackEntity[] = trackIds.map((trackId) =>
       this.trackService.findOne(trackId),
     );
-
-    console.log('fav:=', artists, ' alb=', albums, ' tr=', tracks);
 
     return { artists, albums, tracks };
   }

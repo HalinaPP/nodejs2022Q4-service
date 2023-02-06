@@ -11,21 +11,30 @@ export class InMemoryFavoriteStorage {
     const idIndex = this.favorites.albums.findIndex(
       (albumId) => albumId === id,
     );
-    this.favorites.albums.splice(idIndex, 1);
+
+    if (idIndex > -1) {
+      this.favorites.albums.splice(idIndex, 1);
+    }
   }
 
   deleteArtist(id: string): void {
     const idIndex = this.favorites.artists.findIndex(
       (artistId) => artistId === id,
     );
-    this.favorites.artists.splice(idIndex, 1);
+
+    if (idIndex > -1) {
+      this.favorites.artists.splice(idIndex, 1);
+    }
   }
 
   deleteTrack(id: string): void {
     const idIndex = this.favorites.tracks.findIndex(
       (trackId) => trackId === id,
     );
-    this.favorites.tracks.splice(idIndex, 1);
+
+    if (idIndex > -1) {
+      this.favorites.tracks.splice(idIndex, 1);
+    }
   }
 
   addAlbum(id: string): void {
@@ -44,11 +53,9 @@ export class InMemoryFavoriteStorage {
 
   addArtist(id: string): void {
     const isIdExists = this.favorites.artists.includes(id);
-    console.log('add artist id=', id, ' isex=', isIdExists);
 
     if (!isIdExists) {
       this.favorites.artists.push(id);
-      console.log('fav in add=', this.favorites.artists);
     }
   }
 }
