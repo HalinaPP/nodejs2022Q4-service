@@ -11,7 +11,7 @@ import { UserStorage } from './interfaces/user-storage.interface';
 
 @Injectable()
 export class UserService {
-  constructor(@Inject('UserStorage') private userStorage: UserStorage) { }
+  constructor(@Inject('UserStorage') private userStorage: UserStorage) {}
 
   create(createUserDto: CreateUserDto): UserEntity {
     return this.userStorage.create(createUserDto);

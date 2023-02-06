@@ -15,7 +15,7 @@ export class TrackService {
     private albumService: AlbumService,
     @Inject(forwardRef(() => FavoritesService))
     private favoriteService: FavoritesService,
-  ) { }
+  ) {}
 
   create(createTrackDto: CreateTrackDto) {
     const { artistId, albumId } = createTrackDto;

@@ -16,7 +16,7 @@ export class ArtistService {
     private albumService: AlbumService,
     @Inject(forwardRef(() => FavoritesService))
     private favoriteService: FavoritesService,
-  ) { }
+  ) {}
 
   create(createArtistDto: CreateArtistDto) {
     return this.artistStorage.create(createArtistDto);

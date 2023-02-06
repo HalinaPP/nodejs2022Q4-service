@@ -22,4 +22,4 @@ import { InMemoryFavoriteStorage } from './store/favorites.storage';
     forwardRef(() => TrackModule),
   ],
 })
-export class FavoritesModule { }
+export class FavoritesModule {}

@@ -22,4 +22,4 @@ import { InMemoryArtistStorage } from './store/artist.storage';
     forwardRef(() => FavoritesModule),
   ],
 })
-export class ArtistModule { }
+export class ArtistModule {}

@@ -22,4 +22,4 @@ import { InMemoryAlbumStorage } from './store/album.storage';
     forwardRef(() => FavoritesModule),
   ],
 })
-export class AlbumModule { }
+export class AlbumModule {}

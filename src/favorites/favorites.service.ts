@@ -22,7 +22,7 @@ export class FavoritesService {
     private albumService: AlbumService,
     @Inject(forwardRef(() => TrackService))
     private trackService: TrackService,
-  ) { }
+  ) {}
 
   addTrack(id: string) {
     const track: TrackEntity = this.trackService.findOne(id);

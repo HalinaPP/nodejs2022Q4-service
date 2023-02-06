@@ -22,4 +22,4 @@ import { ArtistModule } from 'src/artist/artist.module';
     forwardRef(() => FavoritesModule),
   ],
 })
-export class TrackModule { }
+export class TrackModule {}
