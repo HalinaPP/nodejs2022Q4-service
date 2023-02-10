@@ -10,6 +10,7 @@ import {
   NotFoundException,
   HttpStatus,
   HttpCode,
+  Header,
 } from '@nestjs/common';
 import { AlbumService } from './album.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
@@ -17,19 +18,22 @@ import { UpdateAlbumDto } from './dto/update-album.dto';
 
 @Controller('album')
 export class AlbumController {
-  constructor(private readonly albumService: AlbumService) {}
+  constructor(private readonly albumService: AlbumService) { }
 
   @Post()
+  @Header('content-type', 'application/json')
   create(@Body() createAlbumDto: CreateAlbumDto) {
     return this.albumService.create(createAlbumDto);
   }
 
   @Get()
+  @Header('content-type', 'application/json')
   findAll() {
     return this.albumService.findAll();
   }
 
   @Get(':id')
+  @Header('content-type', 'application/json')
   findOne(@Param('id', ParseUUIDPipe) id: string) {
     const album = this.albumService.findOne(id);
 
@@ -41,6 +45,7 @@ export class AlbumController {
   }
 
   @Put(':id')
+  @Header('content-type', 'application/json')
   update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateAlbumDto: UpdateAlbumDto,
@@ -54,6 +59,7 @@ export class AlbumController {
   }
 
   @Delete(':id')
+  @Header('content-type', 'application/json')
   @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param('id', ParseUUIDPipe) id: string) {
     const isDeleted = this.albumService.remove(id);

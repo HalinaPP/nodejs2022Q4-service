@@ -1,0 +1,16 @@
+version: '3'
+services:
+  web:
+    build: ./docker/Dockerfile.app
+    ports:
+      - '5000:5000'
+    volumes:
+      - .:/code
+  db:
+    build: ./docker/Dockerfile.db
+    ports:
+      - '3306:3306'
+  redis:
+    # will use docker hub's redis prebuilt image from here:
+    # https://hub.docker.com/_/redis/
+    image: 'redis:alpine'
