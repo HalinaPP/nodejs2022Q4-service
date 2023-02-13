@@ -1,6 +1,6 @@
 FROM node:18.14-alpine
 
-WORKDIR /usr/app
+WORKDIR /usr/app/
 
 COPY package*.json .
 
@@ -12,5 +12,4 @@ COPY . .
 
 EXPOSE ${PORT}
 
-CMD [ "npm", "build" ]
 CMD [ "npm", "start" ]
