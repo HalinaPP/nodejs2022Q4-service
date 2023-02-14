@@ -2,7 +2,6 @@ import { TrackEntity } from './../track/entities/track.entity';
 import { TrackService } from './../track/track.service';
 import { AlbumEntity } from './../album/entities/album.entity';
 import { AlbumService } from 'src/album/album.service';
-import { ArtistEntity } from './../artist/entities/artist.entity';
 import { FavoriteStorage } from './interfaces/favorites-storage.interface';
 import {
   forwardRef,
@@ -11,6 +10,8 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { ArtistService } from 'src/artist/artist.service';
+import { Artist } from 'src/artist/entities/artist.db-entity';
+//import { ArtistEntity } from 'src/artist/entities/artist.entity';
 
 @Injectable()
 export class FavoritesService {
@@ -22,7 +23,7 @@ export class FavoritesService {
     private albumService: AlbumService,
     @Inject(forwardRef(() => TrackService))
     private trackService: TrackService,
-  ) {}
+  ) { }
 
   addTrack(id: string) {
     const track: TrackEntity = this.trackService.findOne(id);
@@ -44,8 +45,9 @@ export class FavoritesService {
     return this.favoriteStorage.addAlbum(id);
   }
 
-  addArtist(id: string) {
-    const artist: ArtistEntity = this.artistService.findOne(id);
+  async addArtist(id: string) {
+    const artist: Artist = await this.artistService.findOne(id);
+    //const artist: ArtistEntity = this.artistService.findOne(id);
 
     if (!artist) {
       throw new UnprocessableEntityException("Artist doesn't exist");
@@ -54,7 +56,7 @@ export class FavoritesService {
     return this.favoriteStorage.addArtist(id);
   }
 
-  findAll() {
+  async findAll() {
     const favorites = this.favoriteStorage.findAll();
 
     const {
@@ -63,8 +65,13 @@ export class FavoritesService {
       tracks: trackIds,
     } = favorites;
 
-    const artists: ArtistEntity[] = artistIds.map((artistId) =>
-      this.artistService.findOne(artistId),
+    const artists: Artist[] = await Promise.all(
+      artistIds.map(
+        async (artistId) => await this.artistService.findOne(artistId),
+      ),
+      /* const artists: ArtistEntity[] = artistIds.map((artistId) =>
+         this.artistService.findOne(artistId),
+   */
     );
 
     const albums: AlbumEntity[] = albumIds.map((albumId) =>
