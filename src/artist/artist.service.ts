@@ -38,8 +38,7 @@ export class ArtistService {
   }
 
   findOne(id: string) {
-    const artist = this.artistRepository.findOneBy({ id });
-    return artist;
+    return this.artistRepository.findOneBy({ id });
   }
 
   async update(id: string, updateArtistDto: UpdateArtistDto) {

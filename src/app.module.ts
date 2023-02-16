@@ -1,3 +1,4 @@
+import { User } from './user/entities/user.entity';
 import { Artist } from 'src/artist/entities/artist.db-entity';
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
@@ -19,7 +20,7 @@ import { DataSource } from 'typeorm';
       username: 'postgres',
       password: 'postgres',
       database: 'nodejs2022q4-service',
-      entities: [Artist],
+      entities: [Artist, User],
       synchronize: true,
     }),
     UserModule,
