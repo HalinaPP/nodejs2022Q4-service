@@ -11,7 +11,6 @@ import {
 } from '@nestjs/common';
 import { ArtistService } from 'src/artist/artist.service';
 import { Artist } from 'src/artist/entities/artist.db-entity';
-//import { ArtistEntity } from 'src/artist/entities/artist.entity';
 
 @Injectable()
 export class FavoritesService {

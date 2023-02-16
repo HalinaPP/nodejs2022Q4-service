@@ -5,18 +5,11 @@ import { AlbumModule } from './../album/album.module';
 import { forwardRef, Module } from '@nestjs/common';
 import { ArtistService } from './artist.service';
 import { ArtistController } from './artist.controller';
-import { InMemoryArtistStorage } from './store/artist.storage';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
   controllers: [ArtistController],
-  providers: [
-    ArtistService,
-    {
-      provide: 'ArtistStorage',
-      useClass: InMemoryArtistStorage,
-    },
-  ],
+  providers: [ArtistService],
   exports: [TypeOrmModule, ArtistService],
   imports: [
     TypeOrmModule.forFeature([Artist]),
