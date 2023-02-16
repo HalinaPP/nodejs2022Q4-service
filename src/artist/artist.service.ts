@@ -57,7 +57,6 @@ export class ArtistService {
 
   async remove(id: string) {
     this.trackService.setNullToArtistId(id);
-    this.albumService.setNullToArtistId(id);
     this.favoriteService.removeArtist(id);
 
     const deleteResult = await this.artistRepository.delete(id);

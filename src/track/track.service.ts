@@ -9,19 +9,20 @@ import { FavoritesService } from 'src/favorites/favorites.service';
 @Injectable()
 export class TrackService {
   constructor(
+    @Inject(forwardRef(() => ArtistService))
     private artistService: ArtistService,
     @Inject('TrackStorage') private trackStorage: TrackStorage,
     @Inject(forwardRef(() => AlbumService))
     private albumService: AlbumService,
     @Inject(forwardRef(() => FavoritesService))
     private favoriteService: FavoritesService,
-  ) {}
+  ) { }
 
-  create(createTrackDto: CreateTrackDto) {
+  async create(createTrackDto: CreateTrackDto) {
     const { artistId, albumId } = createTrackDto;
 
     if (artistId) {
-      const artist = this.artistService.findOne(artistId);
+      const artist = await this.artistService.findOne(artistId);
 
       if (!artist) {
         throw new Error('Artist not found/BadRequest');
@@ -29,7 +30,7 @@ export class TrackService {
     }
 
     if (albumId) {
-      const album = this.albumService.findOne(albumId);
+      const album = await this.albumService.findOne(albumId);
 
       if (!album) {
         throw new Error('Album not found/BadRequest');
@@ -47,11 +48,11 @@ export class TrackService {
     return this.trackStorage.findOne(id);
   }
 
-  update(id: string, updateTrackDto: UpdateTrackDto) {
+  async update(id: string, updateTrackDto: UpdateTrackDto) {
     const { artistId, albumId } = updateTrackDto;
 
     if (artistId) {
-      const artist = this.artistService.findOne(artistId);
+      const artist = await this.artistService.findOne(artistId);
 
       if (!artist) {
         throw new Error('Artist not found/BadRequest');
@@ -59,7 +60,7 @@ export class TrackService {
     }
 
     if (albumId) {
-      const album = this.albumService.findOne(albumId);
+      const album = await this.albumService.findOne(albumId);
 
       if (!album) {
         throw new Error('Album not found/BadRequest');

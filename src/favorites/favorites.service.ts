@@ -1,6 +1,6 @@
 import { TrackEntity } from './../track/entities/track.entity';
 import { TrackService } from './../track/track.service';
-import { AlbumEntity } from './../album/entities/album.entity';
+import { Album } from './../album/entities/album.entity';
 import { AlbumService } from 'src/album/album.service';
 import { FavoriteStorage } from './interfaces/favorites-storage.interface';
 import {
@@ -34,8 +34,8 @@ export class FavoritesService {
     return this.favoriteStorage.addTrack(id);
   }
 
-  addAlbum(id: string) {
-    const album: AlbumEntity = this.albumService.findOne(id);
+  async addAlbum(id: string) {
+    const album: Album = await this.albumService.findOne(id);
 
     if (!album) {
       throw new UnprocessableEntityException("Album doesn't exist");
@@ -46,7 +46,6 @@ export class FavoritesService {
 
   async addArtist(id: string) {
     const artist: Artist = await this.artistService.findOne(id);
-    //const artist: ArtistEntity = this.artistService.findOne(id);
 
     if (!artist) {
       throw new UnprocessableEntityException("Artist doesn't exist");
@@ -68,13 +67,10 @@ export class FavoritesService {
       artistIds.map(
         async (artistId) => await this.artistService.findOne(artistId),
       ),
-      /* const artists: ArtistEntity[] = artistIds.map((artistId) =>
-         this.artistService.findOne(artistId),
-   */
     );
 
-    const albums: AlbumEntity[] = albumIds.map((albumId) =>
-      this.albumService.findOne(albumId),
+    const albums: Album[] = await Promise.all(
+      albumIds.map(async (albumId) => await this.albumService.findOne(albumId)),
     );
 
     const tracks: TrackEntity[] = trackIds.map((trackId) =>

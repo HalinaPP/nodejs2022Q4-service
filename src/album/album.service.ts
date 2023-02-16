@@ -1,67 +1,82 @@
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { ArtistService } from 'src/artist/artist.service';
 import { FavoritesService } from './../favorites/favorites.service';
 import { TrackService } from './../track/track.service';
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
-import { AlbumStorage } from './interfaces/album-storage.interface';
-import { ArtistService } from 'src/artist/artist.service';
+import { Album } from 'src/album/entities/album.entity';
 
 @Injectable()
 export class AlbumService {
   constructor(
-    @Inject('AlbumStorage') private albumStorage: AlbumStorage,
+    @InjectRepository(Album)
+    private albumRepository: Repository<Album>,
     @Inject(forwardRef(() => ArtistService))
     private artistService: ArtistService,
     @Inject(forwardRef(() => TrackService))
     private trackService: TrackService,
     @Inject(forwardRef(() => FavoritesService))
     private favoriteService: FavoritesService,
-  ) {}
+  ) { }
 
-  create(createAlbumDto: CreateAlbumDto) {
-    const { artistId } = createAlbumDto;
-
+  async checkIfArtistExists(artistId) {
     if (artistId) {
-      const artist = this.artistService.findOne(artistId);
+      const artist = await this.artistService.findOne(artistId);
 
       if (!artist) {
         throw new Error('Artist not found/BadRequest');
       }
     }
+  }
 
-    return this.albumStorage.create(createAlbumDto);
+  async create(createAlbumDto: CreateAlbumDto) {
+    const { artistId } = createAlbumDto;
+
+    await this.checkIfArtistExists(artistId);
+    console.log('al=', createAlbumDto);
+    const createdAlbum = await this.albumRepository.save(createAlbumDto);
+    console.log('create=', createdAlbum);
+    return createdAlbum;
   }
 
   findAll() {
-    return this.albumStorage.findAll();
+    return this.albumRepository.find({
+      relations: {
+        artist: true,
+      },
+    });
   }
 
   findOne(id: string) {
-    return this.albumStorage.findOne(id);
+    return this.albumRepository.findOneBy({ id });
   }
 
-  update(id: string, updateAlbumDto: UpdateAlbumDto) {
+  async update(id: string, updateAlbumDto: UpdateAlbumDto) {
     const { artistId } = updateAlbumDto;
 
-    if (artistId) {
-      const artist = this.artistService.findOne(artistId);
+    await this.checkIfArtistExists(artistId);
 
-      if (!artist) {
-        throw new Error('Artist not found/BadRequest');
-      }
+    let updatedAlbum = await this.findOne(id);
+
+    if (!updatedAlbum) {
+      return undefined;
     }
 
-    return this.albumStorage.update(id, updateAlbumDto);
+    updatedAlbum = { ...updatedAlbum, ...updateAlbumDto };
+    await this.albumRepository.save(updatedAlbum);
+
+    return updatedAlbum;
   }
 
-  remove(id: string) {
+  async remove(id: string) {
     this.trackService.setNullToAlbumId(id);
     this.favoriteService.removeAlbum(id);
 
-    return this.albumStorage.delete(id);
-  }
+    const deleteResult = await this.albumRepository.delete(id);
+    const isDeleted = !!deleteResult.affected;
 
-  setNullToArtistId(artistId: string) {
-    return this.albumStorage.setNullToArtistId(artistId);
+    return isDeleted;
   }
 }
