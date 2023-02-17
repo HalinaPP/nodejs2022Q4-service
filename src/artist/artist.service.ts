@@ -3,20 +3,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
-import { AlbumService } from 'src/album/album.service';
 import { FavoritesService } from 'src/favorites/favorites.service';
-import { TrackService } from './../track/track.service';
-import { Artist } from './entities/artist.db-entity';
+import { Artist } from './entities/artist.entity';
 
 @Injectable()
 export class ArtistService {
   constructor(
     @InjectRepository(Artist)
     private artistRepository: Repository<Artist>,
-    @Inject(forwardRef(() => TrackService))
-    private trackService: TrackService,
-    @Inject(forwardRef(() => AlbumService))
-    private albumService: AlbumService,
     @Inject(forwardRef(() => FavoritesService))
     private favoriteService: FavoritesService,
   ) { }
@@ -56,8 +50,7 @@ export class ArtistService {
   }
 
   async remove(id: string) {
-    this.trackService.setNullToArtistId(id);
-    this.favoriteService.removeArtist(id);
+    await this.favoriteService.removeArtist(id);
 
     const deleteResult = await this.artistRepository.delete(id);
     const isDeleted = !!deleteResult.affected;

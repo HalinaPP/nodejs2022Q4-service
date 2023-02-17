@@ -1,3 +1,4 @@
+import { Favorite } from './favorites/entities/favorite.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { Module } from '@nestjs/common';
@@ -9,20 +10,16 @@ import { TrackModule } from './track/track.module';
 import { AlbumModule } from './album/album.module';
 import { FavoritesModule } from './favorites/favorites.module';
 import { User } from './user/entities/user.entity';
-import { Artist } from 'src/artist/entities/artist.db-entity';
+import { Artist } from 'src/artist/entities/artist.entity';
 import { Album } from './album/entities/album.entity';
+import { Track } from './track/entities/track.entity';
+import { dataBaseConfig } from './config';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: 'postgres',
-      database: 'nodejs2022q4-service',
-      entities: [Album, Artist, User],
-      synchronize: true,
+      ...dataBaseConfig,
+      entities: [Album, Artist, Favorite, Track, User],
     }),
     UserModule,
     ArtistModule,

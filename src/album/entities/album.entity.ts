@@ -1,5 +1,13 @@
-import { Artist } from 'src/artist/entities/artist.db-entity';
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Track } from './../../track/entities/track.entity';
+import { Artist } from 'src/artist/entities/artist.entity';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  OneToMany,
+  JoinColumn,
+} from 'typeorm';
 
 @Entity()
 export class Album {
@@ -14,9 +22,13 @@ export class Album {
   @Column()
   year: number;
 
-  /*@Column({ type: 'uuid', nullable: true })
-  artistId: string;*/
-
   @ManyToOne(() => Artist, (artist) => artist.albums, { onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'artistId' })
   artist: Artist;
+
+  @Column({ type: 'uuid', nullable: true })
+  artistId: string;
+
+  @OneToMany(() => Track, (track) => track.album)
+  tracks: Track[];
 }

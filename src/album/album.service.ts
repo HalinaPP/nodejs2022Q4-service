@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ArtistService } from 'src/artist/artist.service';
 import { FavoritesService } from './../favorites/favorites.service';
-import { TrackService } from './../track/track.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
 import { Album } from 'src/album/entities/album.entity';
@@ -15,8 +14,6 @@ export class AlbumService {
     private albumRepository: Repository<Album>,
     @Inject(forwardRef(() => ArtistService))
     private artistService: ArtistService,
-    @Inject(forwardRef(() => TrackService))
-    private trackService: TrackService,
     @Inject(forwardRef(() => FavoritesService))
     private favoriteService: FavoritesService,
   ) { }
@@ -35,21 +32,16 @@ export class AlbumService {
     const { artistId } = createAlbumDto;
 
     await this.checkIfArtistExists(artistId);
-    console.log('al=', createAlbumDto);
     const createdAlbum = await this.albumRepository.save(createAlbumDto);
-    console.log('create=', createdAlbum);
+
     return createdAlbum;
   }
 
-  findAll() {
-    return this.albumRepository.find({
-      relations: {
-        artist: true,
-      },
-    });
+  async findAll() {
+    return this.albumRepository.find();
   }
 
-  findOne(id: string) {
+  async findOne(id: string) {
     return this.albumRepository.findOneBy({ id });
   }
 
@@ -65,14 +57,14 @@ export class AlbumService {
     }
 
     updatedAlbum = { ...updatedAlbum, ...updateAlbumDto };
+
     await this.albumRepository.save(updatedAlbum);
 
     return updatedAlbum;
   }
 
   async remove(id: string) {
-    this.trackService.setNullToAlbumId(id);
-    this.favoriteService.removeAlbum(id);
+    await this.favoriteService.removeAlbum(id);
 
     const deleteResult = await this.albumRepository.delete(id);
     const isDeleted = !!deleteResult.affected;

@@ -4,10 +4,7 @@ export class CreateTrackDto {
   @Length(2, 20)
   name: string;
 
-  //@IsUUID()
   artistId: string | null;
-
-  //@IsUUID()
   albumId: string | null;
 
   @IsInt()

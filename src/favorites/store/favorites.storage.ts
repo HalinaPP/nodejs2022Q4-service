@@ -1,4 +1,4 @@
-import { FavoriteEntity } from '../entities/favorite.entity';
+/*import { FavoriteEntity } from '../entities/favorite.entity';
 
 export class InMemoryFavoriteStorage {
   private favorites: FavoriteEntity = { artists: [], albums: [], tracks: [] };
@@ -59,3 +59,4 @@ export class InMemoryFavoriteStorage {
     }
   }
 }
+*/
