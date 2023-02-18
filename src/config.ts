@@ -11,6 +11,4 @@ export const dataBaseConfig: TypeOrmModuleOptions = {
   username: process.env.POSTGRES_USER || 'postgres',
   password: process.env.POSTGRES_PASSWORD || 'postgres',
   database: process.env.POSTGRES_DB || 'postgres',
-  entities: [],
-  synchronize: true,
 };

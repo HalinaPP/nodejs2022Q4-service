@@ -10,15 +10,21 @@ import { TrackModule } from './track/track.module';
 import { AlbumModule } from './album/album.module';
 import { FavoritesModule } from './favorites/favorites.module';
 import { User } from './user/entities/user.entity';
-import { Artist } from 'src/artist/entities/artist.entity';
+import { Artist } from './artist/entities/artist.entity';
 import { Album } from './album/entities/album.entity';
 import { Track } from './track/entities/track.entity';
-import { dataBaseConfig } from './config';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
-      ...dataBaseConfig,
+      type: 'postgres',
+      host: 'localhost',
+      port: +process.env.POSTGRES_PORT || 5432,
+      username: process.env.POSTGRES_USER || 'postgres',
+      password: process.env.POSTGRES_PASSWORD || 'postgres',
+      database: process.env.POSTGRES_DB || 'postgres',
+      synchronize: false,
+      logging: false,
       entities: [Album, Artist, Favorite, Track, User],
     }),
     UserModule,
