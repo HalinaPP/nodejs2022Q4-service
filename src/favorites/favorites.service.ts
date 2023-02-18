@@ -8,9 +8,9 @@ import {
 import { Track } from './../track/entities/track.entity';
 import { TrackService } from './../track/track.service';
 import { Album } from './../album/entities/album.entity';
-import { AlbumService } from 'src/album/album.service';
-import { ArtistService } from 'src/artist/artist.service';
-import { Artist } from 'src/artist/entities/artist.entity';
+import { AlbumService } from '../album/album.service';
+import { ArtistService } from '../artist/artist.service';
+import { Artist } from '../artist/entities/artist.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -25,7 +25,7 @@ export class FavoritesService {
     private albumService: AlbumService,
     @Inject(forwardRef(() => TrackService))
     private trackService: TrackService,
-  ) { }
+  ) {}
 
   async getFavs(): Promise<Partial<Favorite>> {
     const favorites = await this.favoriteRepository.find();

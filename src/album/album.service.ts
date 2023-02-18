@@ -1,11 +1,11 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ArtistService } from 'src/artist/artist.service';
+import { ArtistService } from '../artist/artist.service';
 import { FavoritesService } from './../favorites/favorites.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
-import { Album } from 'src/album/entities/album.entity';
+import { Album } from './entities/album.entity';
 
 @Injectable()
 export class AlbumService {
@@ -16,7 +16,7 @@ export class AlbumService {
     private artistService: ArtistService,
     @Inject(forwardRef(() => FavoritesService))
     private favoriteService: FavoritesService,
-  ) { }
+  ) {}
 
   async checkIfArtistExists(artistId) {
     if (artistId) {

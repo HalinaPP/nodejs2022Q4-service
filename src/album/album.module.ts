@@ -2,7 +2,7 @@ import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { FavoritesModule } from './../favorites/favorites.module';
 import { ArtistModule } from './../artist/artist.module';
-import { Album } from 'src/album/entities/album.entity';
+import { Album } from './entities/album.entity';
 import { AlbumService } from './album.service';
 import { AlbumController } from './album.controller';
 
@@ -16,4 +16,4 @@ import { AlbumController } from './album.controller';
     forwardRef(() => FavoritesModule),
   ],
 })
-export class AlbumModule { }
+export class AlbumModule {}

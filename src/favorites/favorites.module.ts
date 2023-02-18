@@ -18,4 +18,4 @@ import { Favorite } from './entities/favorite.entity';
     forwardRef(() => TrackModule),
   ],
 })
-export class FavoritesModule { }
+export class FavoritesModule {}

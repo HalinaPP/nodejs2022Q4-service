@@ -14,4 +14,4 @@ import { ArtistController } from './artist.controller';
     forwardRef(() => FavoritesModule),
   ],
 })
-export class ArtistModule { }
+export class ArtistModule {}

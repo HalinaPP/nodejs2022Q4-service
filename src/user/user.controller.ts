@@ -18,7 +18,7 @@ import { ParseUUIDPipe } from '@nestjs/common/pipes';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) { }
+  constructor(private readonly userService: UserService) {}
 
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {

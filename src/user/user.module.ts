@@ -10,4 +10,4 @@ import { User } from './entities/user.entity';
   imports: [TypeOrmModule.forFeature([User])],
   exports: [TypeOrmModule],
 })
-export class UserModule { }
+export class UserModule {}

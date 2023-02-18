@@ -4,7 +4,7 @@ import { FavoritesModule } from './../favorites/favorites.module';
 import { AlbumModule } from './../album/album.module';
 import { TrackService } from './track.service';
 import { TrackController } from './track.controller';
-import { ArtistModule } from 'src/artist/artist.module';
+import { ArtistModule } from '../artist/artist.module';
 import { Track } from './entities/track.entity';
 
 @Module({
@@ -18,4 +18,4 @@ import { Track } from './entities/track.entity';
     forwardRef(() => FavoritesModule),
   ],
 })
-export class TrackModule { }
+export class TrackModule {}
