@@ -1,10 +1,17 @@
 version: '3'
 services:
-  node:
+ node:
     image: halinapp-nodejs2022q4-node:nodejs2022q4-node
     container_name: halinapp-nodejs2022q4-node
     build: .
     restart: always
+    environment:
+      DB_HOST: "${DB_HOST}"
+      DB_PORT: "${DB_PORT}"
+      DB_USER: "${DB_USER}"
+      DB_PASSWORD: "${DB_PASSWORD}"
+      DB_NAME: "${DB_NAME}"
+      PORT: "${PORT}"
     ports:
       - ${PORT}:${PORT}
     env_file:
@@ -12,27 +19,26 @@ services:
     depends_on: 
       - postgres
     volumes:
-     - nodedata:/usr/app/
+     - .:/usr/app/
      - /usr/app/node_modules
 
-  postgres:
+ postgres:
     image:  halinapp-nodejs2022q4-postgres:nodejs2022q4-postgres
     container_name: halinapp-nodejs2022q4-postgres
     build: ./db/
     ports:
-      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+      - ${DB_PORT}:${DB_PORT}
     volumes:
       - pgdata:/var/lib/postgresql/data
       - pglog:/var/lib/postgresql/postgresql.log
     environment:
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
 
 volumes:
   pgdata:
   pglog:
-  nodedata:
 
 networks:
   default:

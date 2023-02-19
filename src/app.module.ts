@@ -18,11 +18,11 @@ import { Track } from './track/entities/track.entity';
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost',
-      port: +process.env.POSTGRES_PORT || 5432,
-      username: process.env.POSTGRES_USER || 'postgres',
-      password: process.env.POSTGRES_PASSWORD || 'postgres',
-      database: process.env.POSTGRES_DB || 'postgres',
+      host: process.env.DB_HOST || 'localhost',
+      port: +process.env.DB_PORT || 5437,
+      username: process.env.DB_USER || 'postgres',
+      password: process.env.DB_PASSWORD || 'postgres',
+      database: process.env.DB_NAME || 'postgres',
       synchronize: false,
       logging: false,
       entities: [Album, Artist, Favorite, Track, User],
