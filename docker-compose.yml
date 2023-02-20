@@ -1,0 +1,39 @@
+version: '3'
+services:
+  node:
+    image: halinapp-nodejs2022q4-node:nodejs2022q4-node
+    container_name: halinapp-nodejs2022q4-node
+    build: .
+    restart: always
+    ports:
+      - ${PORT}:${PORT}
+    env_file:
+      - .env
+    depends_on: 
+      - postgres
+    volumes:
+     - .:/usr/app/
+     - /usr/app/node_modules
+    command: ['npm', 'run', 'start:dev']
+
+  postgres:
+    image:  halinapp-nodejs2022q4-postgres:nodejs2022q4-postgres
+    container_name: halinapp-nodejs2022q4-postgres
+    build: ./db/
+    ports:
+      - ${DB_PORT}:${DB_PORT}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - pglog:/var/lib/postgresql/postgresql.log
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+
+volumes:
+  pgdata:
+  pglog:
+
+networks:
+  default:
+    driver: bridge
