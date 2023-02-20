@@ -23,7 +23,6 @@
     "docker:test": "docker exec halinapp-nodejs2022q4-node npm run test",
     "docker:migration:run": "docker exec halinapp-nodejs2022q4-node npm run typeorm migration:run -- -d ./data-source.ts",
     "docker:scan": "docker scan halinapp-nodejs2022q4-node:nodejs2022q4-node && docker scan halinapp-nodejs2022q4-postgres:nodejs2022q4-postgres",
-    "docker:scan:postgres": "docker scan halinapp-nodejs2022q4-postgres:nodejs2022q4-postgres",
     "docker:ubuntu": "docker compose up",
     "typeorm": "ts-node ./node_modules/typeorm/cli",
     "typeorm:migration:run": "npm run typeorm migration:run -- -d ./data-source.ts",
