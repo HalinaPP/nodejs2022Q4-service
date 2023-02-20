@@ -30,7 +30,7 @@ npm run docker
 
 2. Run migration in docker (not needed PostgreSql on locl machine)
 ```
-docker:migration:run
+npm run docker:migration:run
 ```
 
 ### Testing
