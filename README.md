@@ -25,7 +25,7 @@ Rename '.env.example' file to the '.env' and change data, what you need (PORT, J
 
 1. Create docker images, containers, volumes
 ```
-npm docker
+npm run docker
 ``` 
 
 2. Run migration in docker (not needed PostgreSql on locl machine)
@@ -41,6 +41,12 @@ To run all tests without authorization
 
 ```
 npm run docker:test
+```
+
+### Scan for security vulnerabilities.
+
+```
+npm run docker:scan
 ```
 
 ## Running application (locally)
