@@ -1,85 +1,89 @@
-import { ArtistService } from 'src/artist/artist.service';
-import { AlbumService } from 'src/album/album.service';
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { ArtistService } from '../artist/artist.service';
+import { AlbumService } from '../album/album.service';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
-import { TrackStorage } from './interfaces/track-storage.interface';
-import { FavoritesService } from 'src/favorites/favorites.service';
+import { FavoritesService } from '../favorites/favorites.service';
+import { Track } from './entities/track.entity';
 
 @Injectable()
 export class TrackService {
   constructor(
+    @InjectRepository(Track)
+    private trackRepository: Repository<Track>,
+    @Inject(forwardRef(() => ArtistService))
     private artistService: ArtistService,
-    @Inject('TrackStorage') private trackStorage: TrackStorage,
     @Inject(forwardRef(() => AlbumService))
     private albumService: AlbumService,
     @Inject(forwardRef(() => FavoritesService))
     private favoriteService: FavoritesService,
   ) {}
 
-  create(createTrackDto: CreateTrackDto) {
-    const { artistId, albumId } = createTrackDto;
-
+  async checkIfArtistExists(artistId: string) {
     if (artistId) {
-      const artist = this.artistService.findOne(artistId);
+      const artist = await this.artistService.findOne(artistId);
 
       if (!artist) {
         throw new Error('Artist not found/BadRequest');
       }
     }
+  }
 
+  async checkIfAlbumExists(albumId: string) {
     if (albumId) {
-      const album = this.albumService.findOne(albumId);
+      const album = await this.albumService.findOne(albumId);
 
       if (!album) {
         throw new Error('Album not found/BadRequest');
       }
     }
+  }
 
-    return this.trackStorage.create(createTrackDto);
+  async create(createTrackDto: CreateTrackDto) {
+    const { artistId, albumId } = createTrackDto;
+
+    await this.checkIfAlbumExists(albumId);
+    await this.checkIfArtistExists(artistId);
+
+    const createdTrack = await this.trackRepository.save(createTrackDto);
+
+    return createdTrack;
   }
 
   findAll() {
-    return this.trackStorage.findAll();
+    return this.trackRepository.find();
   }
 
   findOne(id: string) {
-    return this.trackStorage.findOne(id);
+    return this.trackRepository.findOneBy({ id });
   }
 
-  update(id: string, updateTrackDto: UpdateTrackDto) {
+  async update(id: string, updateTrackDto: UpdateTrackDto) {
     const { artistId, albumId } = updateTrackDto;
 
-    if (artistId) {
-      const artist = this.artistService.findOne(artistId);
+    await this.checkIfArtistExists(artistId);
+    await this.checkIfAlbumExists(albumId);
 
-      if (!artist) {
-        throw new Error('Artist not found/BadRequest');
-      }
+    let updatedTrack = await this.findOne(id);
+
+    if (!updatedTrack) {
+      return undefined;
     }
 
-    if (albumId) {
-      const album = this.albumService.findOne(albumId);
+    updatedTrack = { ...updatedTrack, ...updateTrackDto };
+    await this.trackRepository.save(updatedTrack);
 
-      if (!album) {
-        throw new Error('Album not found/BadRequest');
-      }
-    }
-
-    return this.trackStorage.update(id, updateTrackDto);
+    return updatedTrack;
   }
 
-  remove(id: string) {
-    this.favoriteService.removeTrack(id);
+  async remove(id: string) {
+    await this.favoriteService.removeTrack(id);
 
-    return this.trackStorage.delete(id);
-  }
+    const deleteResult = await this.trackRepository.delete(id);
+    const isDeleted = !!deleteResult.affected;
 
-  setNullToAlbumId(albumId: string) {
-    return this.trackStorage.setNullToAlbumId(albumId);
-  }
-
-  setNullToArtistId(artistId: string) {
-    return this.trackStorage.setNullToArtistId(artistId);
+    return isDeleted;
   }
 }

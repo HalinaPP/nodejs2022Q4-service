@@ -1,47 +1,87 @@
-import { UserEntity } from './entities/user.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import {
-  Inject,
   Injectable,
   NotFoundException,
   ForbiddenException,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { UserStorage } from './interfaces/user-storage.interface';
+import { UserDto } from './dto/user.dto';
+import { User } from './entities/user.entity';
+import {
+  convertUserDateToNumber,
+  convertUsersDateToNumber,
+  deleteUsersPassword,
+} from '../utils/helpers';
 
 @Injectable()
 export class UserService {
-  constructor(@Inject('UserStorage') private userStorage: UserStorage) {}
+  constructor(
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
+  ) {}
 
-  create(createUserDto: CreateUserDto): UserEntity {
-    return this.userStorage.create(createUserDto);
+  async create(createUserDto: CreateUserDto): Promise<UserDto> {
+    let newUser = new User();
+
+    newUser = {
+      ...newUser,
+      ...createUserDto,
+    };
+
+    const createdUser = await this.userRepository.save(newUser);
+
+    delete createdUser.password;
+
+    return convertUserDateToNumber(createdUser);
   }
 
-  findAll(): UserEntity[] {
-    return this.userStorage.findAll();
+  async findAll(): Promise<UserDto[]> {
+    const users = await this.userRepository.find();
+    const convertedUsers = convertUsersDateToNumber(users);
+    return deleteUsersPassword(convertedUsers);
   }
 
-  findOne(id: string): UserEntity | undefined {
-    return this.userStorage.findOne(id);
+  async findOne(id: string): Promise<UserDto> {
+    const user = await this.userRepository.findOneBy({ id });
+
+    if (user) {
+      delete user.password;
+      return convertUserDateToNumber(user);
+    }
+
+    return null;
   }
 
-  update(id: string, updateUserDto: UpdateUserDto): UserEntity {
-    const user = this.userStorage.findOneWithPassword(id);
+  async update(id: string, updateUserDto: UpdateUserDto): Promise<UserDto> {
+    let updatedUser = await this.userRepository.findOneBy({ id });
 
-    if (!user) {
+    if (!updatedUser) {
       throw new NotFoundException();
     }
 
-    if (user.password !== updateUserDto.oldPassword) {
+    if (updatedUser.password !== updateUserDto.oldPassword) {
       throw new ForbiddenException();
     }
 
-    const updatedUser = this.userStorage.update(id, updateUserDto);
+    const newVersion = updatedUser.version + 1;
 
-    return updatedUser;
+    updatedUser = {
+      ...updatedUser,
+      password: updateUserDto.newPassword,
+      version: newVersion,
+    };
+
+    await this.userRepository.save(updatedUser);
+
+    delete updatedUser.password;
+
+    return convertUserDateToNumber(updatedUser);
   }
 
-  remove(id: string): boolean {
-    return this.userStorage.deleteUser(id);
+  async remove(id: string): Promise<boolean> {
+    const deleteResult = await this.userRepository.delete(id);
+    return !!deleteResult.affected;
   }
 }

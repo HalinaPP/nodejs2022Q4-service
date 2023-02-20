@@ -28,6 +28,11 @@ Rename '.env.example' file to the '.env' and change data, what you need (PORT, J
 npm run docker
 ``` 
 
+2. Run migration in docker (not needed PostgreSql on locl machine)
+```
+npm run docker:migration:run
+```
+
 ### Testing
 
 After application running open new terminal and enter:
@@ -46,6 +51,13 @@ npm run docker:scan
 
 ## Running application (locally)
 
+1. Before starting  run migration to database
+ ```
+ npm run typeorm:migration:run
+ ```
+
+2. run application
+   
 ```
 npm start
 ```
@@ -54,7 +66,7 @@ After starting the app on port (4000 as default) you can open
 in your browser OpenAPI documentation by typing http://localhost:4000/doc/.
 For more information about OpenAPI/Swagger please visit https://swagger.io/.
 
-## Testing
+### Testing
 
 After application running open new terminal and enter:
 

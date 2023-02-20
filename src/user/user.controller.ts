@@ -21,18 +21,18 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
+  async create(@Body() createUserDto: CreateUserDto) {
+    return await this.userService.create(createUserDto);
   }
 
   @Get()
-  findAll() {
-    return this.userService.findAll();
+  async findAll() {
+    return await this.userService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseUUIDPipe) id: string) {
-    const user: UserDto = this.userService.findOne(id);
+  async findOne(@Param('id', ParseUUIDPipe) id: string) {
+    const user: UserDto = await this.userService.findOne(id);
     if (user) {
       return user;
     }
@@ -41,11 +41,11 @@ export class UserController {
   }
 
   @Put(':id')
-  update(
+  async update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateUserDto: UpdateUserDto,
   ) {
-    const updatedUser = this.userService.update(id, updateUserDto);
+    const updatedUser = await this.userService.update(id, updateUserDto);
 
     if (updatedUser) {
       return updatedUser;
@@ -56,8 +56,8 @@ export class UserController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('id', ParseUUIDPipe) id: string) {
-    const isDeleted = this.userService.remove(id);
+  async remove(@Param('id', ParseUUIDPipe) id: string) {
+    const isDeleted = await this.userService.remove(id);
     if (!isDeleted) {
       throw new NotFoundException();
     }

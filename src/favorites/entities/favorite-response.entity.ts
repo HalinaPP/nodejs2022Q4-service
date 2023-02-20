@@ -1,9 +1,9 @@
-import { TrackEntity } from './../../track/entities/track.entity';
-import { AlbumEntity } from './../../album/entities/album.entity';
-import { ArtistEntity } from './../../artist/entities/artist.entity';
+import { Track } from '../../track/entities/track.entity';
+import { Album } from '../../album/entities/album.entity';
+import { Artist } from '../../artist/entities/artist.entity';
 
 export interface FavoritesRepsonseEntity {
-  artists: ArtistEntity[];
-  albums: AlbumEntity[];
-  tracks: TrackEntity[];
+  artists: Artist[];
+  albums: Album[];
+  tracks: Track[];
 }
