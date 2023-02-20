@@ -19,11 +19,11 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "docker": "docker compose up",
-    "docker:test":"docker exec halinapp-nodejs2022q4-node npm run test", 
-    "docker:scan":"docker scan halinapp-nodejs2022q4-node:nodejs2022q4-node && docker scan halinapp-nodejs2022q4-postgres:nodejs2022q4-postgres",
-    "docker:scan:postgres":"docker scan halinapp-nodejs2022q4-postgres:nodejs2022q4-postgres",
-    "docker:win":"docker-compose up"
+    "docker": "docker-compose up",
+    "docker:test": "docker exec halinapp-nodejs2022q4-node npm run test",
+    "docker:migration:run": "docker exec halinapp-nodejs2022q4-node npm run typeorm migration:run -- -d ./data-source.ts",
+    "docker:scan": "docker scan halinapp-nodejs2022q4-node:nodejs2022q4-node && docker scan halinapp-nodejs2022q4-postgres:nodejs2022q4-postgres",
+    "docker:ubuntu": "docker compose up"
   },
   "dependencies": {
     "@nestjs/common": "^8.0.0",

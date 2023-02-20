@@ -21,7 +21,24 @@ npm install
 
 Rename '.env.example' file to the '.env' and change data, what you need (PORT, JWT_SECRET_KEY and so on), these new data will be used in the application
 
-## Running application
+## Running application using Docker
+
+1. Create docker images, containers, volumes
+```
+npm docker
+``` 
+
+### Testing
+
+After application running open new terminal and enter:
+
+To run all tests without authorization
+
+```
+npm run docker:test
+```
+
+## Running application (locally)
 
 ```
 npm start
