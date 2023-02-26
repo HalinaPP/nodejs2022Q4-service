@@ -1,7 +1,7 @@
 import { Favorite } from './favorites/entities/favorite.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
@@ -13,6 +13,8 @@ import { User } from './user/entities/user.entity';
 import { Artist } from './artist/entities/artist.entity';
 import { Album } from './album/entities/album.entity';
 import { Track } from './track/entities/track.entity';
+import { LoggerMiddleware } from './logger/logger.middleware';
+import { LoggingModule } from './logger/logging.module';
 
 @Module({
   imports: [
@@ -23,7 +25,7 @@ import { Track } from './track/entities/track.entity';
       username: process.env.DB_USER || 'postgres',
       password: process.env.DB_PASSWORD || 'postgres',
       database: process.env.DB_NAME || 'postgres',
-      synchronize: false,
+      synchronize: true,
       logging: false,
       entities: [Album, Artist, Favorite, Track, User],
     }),
@@ -32,10 +34,15 @@ import { Track } from './track/entities/track.entity';
     TrackModule,
     AlbumModule,
     FavoritesModule,
+    LoggingModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {
+export class AppModule implements NestModule {
   constructor(private dataSource: DataSource) { }
+
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
 }

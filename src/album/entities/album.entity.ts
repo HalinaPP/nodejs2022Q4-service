@@ -25,6 +25,14 @@ export class Album {
   @ManyToOne(() => Artist, (artist) => artist.albums, { onDelete: 'SET NULL' })
   @JoinColumn({ name: 'artistId' })
   artist: Artist;
+  /*
+   @ManyToOne(() => ArtistEntity, (artist) => artist.id, {
+    nullable: true,
+    onDelete: 'SET NULL',
+  })
+  @JoinColumn()
+  artist?: Relation<ArtistEntity> | null;
+  */
 
   @Column({ type: 'uuid', nullable: true })
   artistId: string;
