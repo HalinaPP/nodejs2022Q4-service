@@ -1,23 +1,29 @@
+import { Logger, ValidationPipe } from '@nestjs/common';
+import { NestFactory } from '@nestjs/core';
+import { LoggingInterceptor } from './logger/logging.interceptor';
 import { LoggingService } from './logger/logging.service';
 import { PORT } from './config';
-import { ValidationPipe } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { LoggingInterceptor } from './logger/logging.interceptor';
 
 async function bootstrap() {
-  try {
-    const app = await NestFactory.create(AppModule, {
-      bufferLogs: true,
-    });
+  const app = await NestFactory.create(AppModule, {
+    bufferLogs: true,
+  });
 
-    app.useGlobalPipes(new ValidationPipe());
-    app.useLogger(app.get(LoggingService));
-    app.useGlobalInterceptors(new LoggingInterceptor());
+  app.useGlobalPipes(new ValidationPipe());
+  app.useLogger(app.get(LoggingService));
+  app.useGlobalInterceptors(new LoggingInterceptor());
 
-    await app.listen(PORT);
-  } catch (error) {
-    console.log(error);
-  }
+  const logger = new Logger(AppModule.name);
+
+  process.on('uncaughtException', (err) => {
+    logger.error(`uncaughtException: ${err.message}`);
+  });
+
+  process.on('unhandledRejection', (err) => {
+    logger.error(`unhandledRejection: ${err}`);
+  });
+
+  await app.listen(PORT);
 }
 bootstrap();
