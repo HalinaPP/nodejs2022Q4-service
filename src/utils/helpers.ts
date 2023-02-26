@@ -1,5 +1,5 @@
-import { UserDto } from '../user/dto/user.dto';
-import { User } from '../user/entities/user.entity';
+import { UserDto } from '../resources/user/dto/user.dto';
+import { User } from '../resources/user/entities/user.entity';
 
 export const convertUserDateToNumber = (user: User) => {
   const updatedAt = user.updatedAt.getTime();
