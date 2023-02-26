@@ -12,3 +12,7 @@ export const dataBaseConfig: TypeOrmModuleOptions = {
   password: process.env.POSTGRES_PASSWORD || 'postgres',
   database: process.env.POSTGRES_DB || 'postgres',
 };
+
+export const LOGGING_LEVELS = ['log', 'error', 'warn', 'verbose', 'debug'];
+const LEVEL_LOG = 2;
+export const LOGGING_LEVEL = +process.env.LOGGING_LEVEL || LEVEL_LOG;

@@ -25,7 +25,7 @@ import { LoggingModule } from './logger/logging.module';
       username: process.env.DB_USER || 'postgres',
       password: process.env.DB_PASSWORD || 'postgres',
       database: process.env.DB_NAME || 'postgres',
-      synchronize: true,
+      synchronize: false,
       logging: false,
       entities: [Album, Artist, Favorite, Track, User],
     }),
