@@ -1,5 +1,6 @@
-import { LOGGING_LEVEL } from './../config';
+import { LOGGING_LEVEL, logFileName, errorLogFileName } from './../config';
 import { ConsoleLogger } from '@nestjs/common';
+import { writeToFile } from 'src/utils/helpers';
 
 export class LoggingService extends ConsoleLogger {
   private loggingLevel: number;
@@ -9,30 +10,36 @@ export class LoggingService extends ConsoleLogger {
     this.loggingLevel = LOGGING_LEVEL;
   }
 
-  log(message: string) {
+  async log(message: string) {
+    await writeToFile(logFileName, message);
     super.log(message);
   }
 
-  error(message: any) {
+  async error(message: any) {
     if (this.loggingLevel > 0) {
+      await writeToFile(errorLogFileName, message);
+      await writeToFile(logFileName, message);
       super.error(message);
     }
   }
 
-  warn(message: any) {
+  async warn(message: any) {
     if (this.loggingLevel > 1) {
+      await writeToFile(logFileName, message);
       super.warn(message);
     }
   }
 
-  debug(message: any) {
+  async debug(message: any) {
     if (this.loggingLevel > 2) {
+      await writeToFile(logFileName, message);
       super.debug(message);
     }
   }
 
-  verbose(message: any) {
+  async verbose(message: any) {
     if (this.loggingLevel === 4) {
+      await writeToFile(logFileName, message);
       super.verbose(message);
     }
   }
