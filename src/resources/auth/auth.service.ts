@@ -1,13 +1,13 @@
-import { isPasswordMatch } from './../user/hash-password';
+import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Injectable, BadRequestException } from '@nestjs/common';
-import { Auth } from './entities/auth.entity';
+import { isPasswordMatch } from './../user/hash-password';
 import { UserService } from '../user/user.service';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { UserDto } from '../user/dto/user.dto';
-import { JwtService } from '@nestjs/jwt';
 import { Token, TokensDto } from './dto/tokens.dto';
+import { Auth } from './entities/auth.entity';
 
 @Injectable()
 export class AuthService {

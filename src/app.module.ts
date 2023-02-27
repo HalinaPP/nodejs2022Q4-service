@@ -1,5 +1,4 @@
-import { AuthModule } from './resources/auth/auth.module';
-import { Auth } from './resources/auth/entities/auth.entity';
+import { APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
@@ -17,6 +16,9 @@ import { Album } from './resources/album/entities/album.entity';
 import { Track } from './resources/track/entities/track.entity';
 import { LoggerMiddleware } from './logger/logger.middleware';
 import { LoggingModule } from './logger/logging.module';
+import { JwtAuthGuard } from './resources/auth/guards/jwt-auth.guard';
+import { AuthModule } from './resources/auth/auth.module';
+import { Auth } from './resources/auth/entities/auth.entity';
 
 @Module({
   imports: [
@@ -40,7 +42,13 @@ import { LoggingModule } from './logger/logging.module';
     AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+  ],
 })
 export class AppModule implements NestModule {
   constructor(private dataSource: DataSource) { }

@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { APP_FILTER } from '@nestjs/core';
-import { AllExceptionsFilter } from 'src/errors/all-exceptions.filter';
+import { AllExceptionsFilter } from '../errors/all-exceptions.filter';
 import { LoggingService } from './logging.service';
 
 @Module({
