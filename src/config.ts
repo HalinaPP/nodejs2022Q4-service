@@ -19,3 +19,11 @@ export const LOGGING_LEVEL = +process.env.LOGGING_LEVEL || LEVEL_LOG;
 
 export const errorLogFileName = '/usr/app/logs/error.log';
 export const logFileName = '/usr/app/logs/log.log';
+
+export const authConfig = {
+  CRYPT_SALT: process.env.CRYPT_SALT,
+  JWT_SECRET_KEY: process.env.JWT_SECRET_KEY,
+  JWT_SECRET_REFRESH_KEY: process.env.JWT_SECRET_REFRESH_KEY,
+  TOKEN_EXPIRE_TIME: process.env.TOKEN_EXPIRE_TIME,
+  TOKEN_REFRESH_EXPIRE_TIME: process.env.TOKEN_REFRESH_EXPIRE_TIME,
+};

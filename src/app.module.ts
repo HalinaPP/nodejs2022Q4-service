@@ -1,3 +1,5 @@
+import { AuthModule } from './resources/auth/auth.module';
+import { Auth } from './resources/auth/entities/auth.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
@@ -27,7 +29,7 @@ import { LoggingModule } from './logger/logging.module';
       database: process.env.DB_NAME || 'postgres',
       synchronize: false,
       logging: false,
-      entities: [Album, Artist, Favorite, Track, User],
+      entities: [Album, Artist, Favorite, Track, User, Auth],
     }),
     UserModule,
     ArtistModule,
@@ -35,6 +37,7 @@ import { LoggingModule } from './logger/logging.module';
     AlbumModule,
     FavoritesModule,
     LoggingModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
