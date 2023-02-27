@@ -14,8 +14,9 @@ export const dataBaseConfig: TypeOrmModuleOptions = {
 };
 
 export const LOGGING_LEVELS = ['log', 'error', 'warn', 'verbose', 'debug'];
-const LEVEL_LOG = 2;
+const LEVEL_LOG = 4;
 export const LOGGING_LEVEL = +process.env.LOGGING_LEVEL || LEVEL_LOG;
 
-export const errorLogFileName = '/usr/app/logs/error.log';
-export const logFileName = '/usr/app/logs/log.log';
+export const logDirectory = 'logs';
+export const errorLogFileName = 'error.log';
+export const logFileName = 'log.log';

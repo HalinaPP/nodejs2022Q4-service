@@ -1,5 +1,5 @@
-import { access, appendFile } from 'fs/promises';
-import path from 'path';
+import { access, appendFile, mkdir, readdir } from 'fs/promises';
+import { logDirectory } from 'src/config';
 import { UserDto } from '../resources/user/dto/user.dto';
 import { User } from '../resources/user/entities/user.entity';
 
@@ -27,20 +27,6 @@ export const deleteUsersPassword = (users): UserDto[] => {
 export const isEmpty = (value) =>
   value === undefined || value === '' || Object.is(value, null);
 
-export const getAbsolutePath = (pathValue: string) => {
-  const currDir = process.cwd();
-  console.log('c=', currDir);
-  if (isEmpty(pathValue)) {
-    return currDir;
-  }
-  console.log('p=', pathValue);
-
-  const endedPath = pathValue.endsWith(':') ? pathValue + '\\' : pathValue;
-  //console.log("ee=", endedPath, ' f==', path.isAbsolute(endedPath));
-  //return path.isAbsolute(endedPath) ? endedPath : path.join(currDir, endedPath);
-  return path.join(currDir, endedPath);
-};
-
 export const isExists = async (sourceName: string) => {
   let isSourceExists = false;
 
@@ -53,11 +39,15 @@ export const isExists = async (sourceName: string) => {
 };
 
 export const writeToFile = async (fileName: string, message: string) => {
-  // const source = getAbsolutePath(fileName ?? '');
+  const logFolder = `${process.cwd()}/${logDirectory}/`;
+  try {
+    await readdir(logFolder);
+  } catch (err) {
+    await mkdir(logFolder, { recursive: true });
+  }
 
-  //const isfileExists = await isExists(fileName);
-  //  if (isfileExists) {
+  const source = `${logFolder}${fileName}`;
+
   const line = message + '\r\n';
-  await appendFile(fileName, line);
-  //}
+  await appendFile(source, line);
 };
