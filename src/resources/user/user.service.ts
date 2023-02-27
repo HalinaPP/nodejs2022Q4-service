@@ -14,6 +14,7 @@ import {
   convertUsersDateToNumber,
   deleteUsersPassword,
 } from '../../utils/helpers';
+import { hashPassword, isPasswordMatch } from './hash-password';
 
 @Injectable()
 export class UserService {
@@ -23,11 +24,15 @@ export class UserService {
   ) { }
 
   async create(createUserDto: CreateUserDto): Promise<UserDto> {
+    const { login, password } = createUserDto;
     let newUser = new User();
+
+    const hashedPassword = await hashPassword(password);
 
     newUser = {
       ...newUser,
-      ...createUserDto,
+      login: login,
+      password: hashedPassword,
     };
 
     const createdUser = await this.userRepository.save(newUser);
@@ -65,15 +70,21 @@ export class UserService {
       throw new NotFoundException();
     }
 
-    if (updatedUser.password !== updateUserDto.oldPassword) {
+    const { oldPassword, newPassword } = updateUserDto;
+
+    const isMatch = await isPasswordMatch(oldPassword, updatedUser.password);
+
+    if (!isMatch) {
       throw new ForbiddenException();
     }
+
+    const hashedNewPassword = await hashPassword(newPassword);
 
     const newVersion = updatedUser.version + 1;
 
     updatedUser = {
       ...updatedUser,
-      password: updateUserDto.newPassword,
+      password: hashedNewPassword,
       version: newVersion,
     };
 
