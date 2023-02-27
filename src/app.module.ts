@@ -1,18 +1,20 @@
-import { Favorite } from './favorites/entities/favorite.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UserModule } from './user/user.module';
-import { ArtistModule } from './artist/artist.module';
-import { TrackModule } from './track/track.module';
-import { AlbumModule } from './album/album.module';
-import { FavoritesModule } from './favorites/favorites.module';
-import { User } from './user/entities/user.entity';
-import { Artist } from './artist/entities/artist.entity';
-import { Album } from './album/entities/album.entity';
-import { Track } from './track/entities/track.entity';
+import { UserModule } from './resources/user/user.module';
+import { ArtistModule } from './resources/artist/artist.module';
+import { TrackModule } from './resources/track/track.module';
+import { AlbumModule } from './resources/album/album.module';
+import { FavoritesModule } from './resources/favorites/favorites.module';
+import { Favorite } from './resources/favorites/entities/favorite.entity';
+import { User } from './resources/user/entities/user.entity';
+import { Artist } from './resources/artist/entities/artist.entity';
+import { Album } from './resources/album/entities/album.entity';
+import { Track } from './resources/track/entities/track.entity';
+import { LoggerMiddleware } from './logger/logger.middleware';
+import { LoggingModule } from './logger/logging.module';
 
 @Module({
   imports: [
@@ -32,10 +34,15 @@ import { Track } from './track/entities/track.entity';
     TrackModule,
     AlbumModule,
     FavoritesModule,
+    LoggingModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {
+export class AppModule implements NestModule {
   constructor(private dataSource: DataSource) { }
+
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
 }

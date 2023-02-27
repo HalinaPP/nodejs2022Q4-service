@@ -13,14 +13,14 @@ import {
   convertUserDateToNumber,
   convertUsersDateToNumber,
   deleteUsersPassword,
-} from '../utils/helpers';
+} from '../../utils/helpers';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
-  ) {}
+  ) { }
 
   async create(createUserDto: CreateUserDto): Promise<UserDto> {
     let newUser = new User();

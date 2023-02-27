@@ -1,16 +1,27 @@
-import { PORT } from './config';
-import { ValidationPipe } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import { LoggingService } from './logger/logging.service';
+import { PORT } from './config';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-  try {
-    const app = await NestFactory.create(AppModule);
-    app.useGlobalPipes(new ValidationPipe());
+  const app = await NestFactory.create(AppModule, {
+    bufferLogs: true,
+  });
 
-    await app.listen(PORT);
-  } catch (error) {
-    console.log(error);
-  }
+  app.useGlobalPipes(new ValidationPipe());
+  app.useLogger(app.get(LoggingService));
+
+  const logger = new Logger(AppModule.name);
+
+  process.on('uncaughtException', (err) => {
+    logger.error(`uncaughtException: ${err.message}`);
+  });
+
+  process.on('unhandledRejection', (err) => {
+    logger.error(`unhandledRejection: ${err}`);
+  });
+
+  await app.listen(PORT);
 }
 bootstrap();
