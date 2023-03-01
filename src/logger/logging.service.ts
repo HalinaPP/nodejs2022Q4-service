@@ -1,6 +1,6 @@
 import { LOGGING_LEVEL, logFileName, errorLogFileName } from './../config';
 import { ConsoleLogger } from '@nestjs/common';
-import { writeToFile } from 'src/utils/helpers';
+import { writeToFile } from '../utils/helpers';
 
 export class LoggingService extends ConsoleLogger {
   private loggingLevel: number;
